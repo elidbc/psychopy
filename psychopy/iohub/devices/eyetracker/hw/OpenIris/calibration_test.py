@@ -241,7 +241,7 @@ class DPICalibrationProcedure():
             
             gevent.sleep(0.001)
             print(f"checking for q point {i}")
-            msg = self._msg_queue.get_nowait()
+            msg = self.getNextMsg()
             if self.allow_escape and msg == 'q':
                 abort_calibration = True
                 break

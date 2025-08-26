@@ -58,12 +58,12 @@ class DataCollector(threading.Thread):
 
     def run(self):
         print(f"{self.name} started.")            
-        if not eyetracker.isConnected():
+        if not self.eyetracker.isConnected():
             print2err("OpenIris client is not connected. Exiting collector thread.")
 
         else:
             while not self.stop_event.is_set():
-                data = eyetracker._poll_basic()
+                data = self.eyetracker._poll_basic()
                 if data is not None:
                     self.screen_queue.put(data[0])
                 else:
@@ -104,7 +104,7 @@ class Renderer(threading.Thread):
                 self.rendered_count += 1
             except queue.Empty:
                 print("queue empty") # No data in queue, continue to check for updates/stop_event
-            time.sleep(self.check_delay)
+            #time.sleep(self.check_delay)
 
         # kill windows and end psychopy stuff
 
@@ -150,7 +150,7 @@ if __name__ == "__main__":
                 print(f"Time: {i * 0.1} seconds")
                 print(f"Collected Count: {collector_thread.get_collected_count()}")
                 print(f"Rendered Count: {renderer_thread.get_rendered_count()}")
-                print(f"Queue Polled: {screen_position_queue.get()}")
+                print(f"Queue Polled: {screen_position_queue.qsize()}")
         
             print("Stopping threads...")
 
